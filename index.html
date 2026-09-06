@@ -122,6 +122,25 @@
         .svg-container { background: #0e1117; border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 10px; text-align: center; padding: 8px 0; overflow: hidden; }
         .svg-container svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
         
+        /* AI 实景图片容器样式 */
+        .img-container {
+            background: #0e1117;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .img-container img {
+            width: 100%;
+            height: auto;
+            max-height: 220px;
+            object-fit: cover;
+            display: block;
+        }
+
         /* 音频波形 */
         .audio-wave { display: flex; align-items: center; gap: 3px; height: 35px; background: #0e1117; padding: 8px; border-radius: 6px; }
         .bar { flex: 1; background: #2c3444; height: 30%; transition: 0.3s; }
@@ -191,6 +210,10 @@
             padding: 15px;
             overflow-y: auto;
         }
+        /* 弹窗中的图片样式取消最大高度限制，方便玩家放大查看 */
+        .modal-body .img-container img {
+            max-height: none;
+        }
 
         /* 📱 手机端竖屏专属优化 (Mobile Portrait Optimization) */
         @media (max-width: 768px) {
@@ -258,7 +281,7 @@
     <!-- 5大无序网格卡片 -->
     <div class="grid">
 
-        <!-- 站点 1：现场图谱 -->
+        <!-- 站点 1：现场图谱（已修改为图片容器） -->
         <div class="card" id="card-1" onclick="openModalIfUnlocked(1)">
             <div class="card-mask">
                 <p>🔒 需要【站点 1：现场图谱】密钥</p>
@@ -268,22 +291,9 @@
                 <span class="card-tag">密钥: 8912</span>
             </div>
             <div class="card-body">
-                <div class="svg-container">
-                    <svg width="300" height="130" viewBox="0 0 300 130">
-                        <rect x="10" y="10" width="280" height="110" fill="none" stroke="#262c3a" stroke-width="2"/>
-                        <rect x="160" y="30" width="90" height="45" fill="#1f2430" stroke="#ffd166"/>
-                        <circle cx="160" cy="30" r="4" fill="#e63946"/>
-                        <text x="165" y="55" fill="#e63946" font-size="9">桌角血迹</text>
-                        <path d="M 180 60 Q 195 55 200 68 T 180 60" fill="#2b5c8f"/>
-                        <text x="205" y="68" fill="#2b5c8f" font-size="8">倒翻墨水</text>
-                        <path d="M 40 80 Q 55 75 60 90 T 40 80" fill="#a86b32" opacity="0.6"/>
-                        <text x="35" y="105" fill="#a86b32" font-size="8">咖啡渍(19:00-20:00)</text>
-                        <circle cx="100" cy="95" r="1.5" fill="#888"/>
-                        <circle cx="103" cy="97" r="1" fill="#888"/>
-                        <text x="110" y="98" fill="#888" font-size="8">烟草灰烬</text>
-                        <line x1="10" y1="30" x2="10" y2="80" stroke="#e63946" stroke-width="3"/>
-                        <text x="15" y="60" fill="#e63946" font-size="9">窗台推拽痕迹</text>
-                    </svg>
+                <!-- 替换图片说明：请将 src="site01.jpg" 改为您生成保存的图片路径 -->
+                <div class="img-container">
+                    <img src="site01.jpg" alt="现场图谱照片" onerror="this.onerror=null; this.src='https://via.placeholder.com/600x350/0e1117/ffd166?text=%E8%AF%B7%E5%B0%86AI%E7%94%9F%E6%82%A3%E5%9B%BE%E7%89%87%E5%90%8D%E7%A7%B0%E6%94%B9%E4%B8%BA+site01.jpg'">
                 </div>
                 
                 <div class="report-section-title">现场调查报告</div>
