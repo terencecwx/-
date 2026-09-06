@@ -89,7 +89,17 @@
 
         /* 网格卡片 */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; }
-        .card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; position: relative; min-height: 280px; }
+        .card { 
+            background: var(--card-bg); 
+            border: 1px solid var(--border-color); 
+            border-radius: 8px; 
+            overflow: hidden; 
+            position: relative; 
+            min-height: 280px; 
+            transition: border-color 0.3s;
+        }
+        .card.unlocked { cursor: pointer; }
+        .card.unlocked:hover { border-color: var(--gold); }
         
         .card-mask {
             position: absolute; top:0; left:0; right:0; bottom:0;
@@ -128,6 +138,59 @@
         .dialogue-box { background: #0e1117; border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; font-size: 12px; margin-top: 8px; }
         .dialogue-q { color: var(--gold); font-weight: bold; margin-bottom: 4px; }
         .dialogue-a { color: var(--text-main); line-height: 1.5; }
+
+        /* 解锁弹窗 (Modal) 样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 15px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-container {
+            background: var(--card-bg);
+            border: 1px solid var(--gold);
+            border-radius: 10px;
+            max-width: 580px;
+            width: 100%;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            animation: modalIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .modal-header {
+            background: #1c212e;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .modal-close-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            font-size: 22px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0 5px;
+        }
+        .modal-close-btn:hover { color: #fff; }
+        .modal-body {
+            padding: 15px;
+            overflow-y: auto;
+        }
 
         /* 📱 手机端竖屏专属优化 (Mobile Portrait Optimization) */
         @media (max-width: 768px) {
@@ -175,7 +238,7 @@
             </div>
             <div class="npc-card-item">
                 <div class="npc-name">老张</div>
-                <div style="color: var(--text-dim);">《深讯网》档案库管理员，脾气古怪，5年前曾任黑河化工企业看门人。</div>
+                <div style="color: var(--text-dim);">《深讯网》档案库管理员，脾气古怪，5年前曾任黑河化工企业技术人员。</div>
             </div>
             <div class="npc-card-item">
                 <div class="npc-name">K</div>
@@ -196,7 +259,7 @@
     <div class="grid">
 
         <!-- 站点 1：现场图谱 -->
-        <div class="card" id="card-1">
+        <div class="card" id="card-1" onclick="openModalIfUnlocked(1)">
             <div class="card-mask">
                 <p>🔒 需要【站点 1：现场图谱】密钥</p>
             </div>
@@ -205,25 +268,19 @@
                 <span class="card-tag">密钥: 8912</span>
             </div>
             <div class="card-body">
-                <!-- SVG 线条复刻：包含推拽痕迹、血迹、咖啡渍、烟灰、倒翻墨水 -->
                 <div class="svg-container">
                     <svg width="300" height="130" viewBox="0 0 300 130">
                         <rect x="10" y="10" width="280" height="110" fill="none" stroke="#262c3a" stroke-width="2"/>
-                        <!-- 办公桌与桌角血迹 -->
                         <rect x="160" y="30" width="90" height="45" fill="#1f2430" stroke="#ffd166"/>
                         <circle cx="160" cy="30" r="4" fill="#e63946"/>
                         <text x="165" y="55" fill="#e63946" font-size="9">桌角血迹</text>
-                        <!-- 倒翻的墨水 -->
                         <path d="M 180 60 Q 195 55 200 68 T 180 60" fill="#2b5c8f"/>
                         <text x="205" y="68" fill="#2b5c8f" font-size="8">倒翻墨水</text>
-                        <!-- 地板咖啡渍 -->
                         <path d="M 40 80 Q 55 75 60 90 T 40 80" fill="#a86b32" opacity="0.6"/>
                         <text x="35" y="105" fill="#a86b32" font-size="8">咖啡渍(19:00-20:00)</text>
-                        <!-- 烟草灰烬 -->
                         <circle cx="100" cy="95" r="1.5" fill="#888"/>
                         <circle cx="103" cy="97" r="1" fill="#888"/>
                         <text x="110" y="98" fill="#888" font-size="8">烟草灰烬</text>
-                        <!-- 窗户推拽痕迹 -->
                         <line x1="10" y1="30" x2="10" y2="80" stroke="#e63946" stroke-width="3"/>
                         <text x="15" y="60" fill="#e63946" font-size="9">窗台推拽痕迹</text>
                     </svg>
@@ -241,7 +298,7 @@
         </div>
 
         <!-- 站点 2：系统日志 -->
-        <div class="card" id="card-2">
+        <div class="card" id="card-2" onclick="openModalIfUnlocked(2)">
             <div class="card-mask">
                 <p>🔒 需要【站点 2：系统日志】密钥</p>
             </div>
@@ -250,13 +307,10 @@
                 <span class="card-tag">密钥: 3041</span>
             </div>
             <div class="card-body">
-                <!-- SVG 线条复刻：原有的电梯监控矢量图 -->
                 <div class="svg-container">
                     <svg width="280" height="130" viewBox="0 0 280 130">
                         <rect x="20" y="10" width="240" height="110" fill="#05070a" stroke="#262c3a"/>
-                        <!-- 电梯厢线条 -->
                         <rect x="80" y="20" width="120" height="90" fill="none" stroke="#2a9d8f" stroke-dasharray="2"/>
-                        <!-- 监控视角人影 -->
                         <circle cx="140" cy="45" r="12" fill="#2a9d8f"/>
                         <path d="M 120 85 L 140 58 L 160 85 Z" fill="#2a9d8f"/>
                         <text x="30" y="30" fill="#ffd166" font-size="9">CAM-04 20:20:12</text>
@@ -278,7 +332,7 @@
         </div>
 
         <!-- 站点 3：警方调查 -->
-        <div class="card" id="card-3">
+        <div class="card" id="card-3" onclick="openModalIfUnlocked(3)">
             <div class="card-mask">
                 <p>🔒 需要【站点 3：警方调查】密钥</p>
             </div>
@@ -287,13 +341,13 @@
                 <span class="card-tag">密钥: 6620</span>
             </div>
             <div class="card-body">
-                <div class="audio-wave" id="wave-bar-box">
+                <div class="audio-wave">
                     <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
                     <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
                 </div>
-                <button class="btn" style="width: 100%; margin-top: 8px;" onclick="playAudio()">▶ 播放保洁阿姨笔录录音</button>
+                <button class="btn" style="width: 100%; margin-top: 8px;" onclick="playAudio(this); event.stopPropagation();">▶ 播放保洁阿姨笔录录音</button>
                 
-                <div class="dialogue-box" id="audio-text">
+                <div class="dialogue-box">
                     <div class="dialogue-q">【民警询问笔录】（点击上方按钮播放）</div>
                     <div class="dialogue-a" style="color: var(--text-dim);">点击播放音频调取口供录音档案...</div>
                 </div>
@@ -301,7 +355,7 @@
         </div>
 
         <!-- 站点 4：银行系统 -->
-        <div class="card" id="card-4">
+        <div class="card" id="card-4" onclick="openModalIfUnlocked(4)">
             <div class="card-mask">
                 <p>🔒 需要【站点 4：银行系统】密钥</p>
             </div>
@@ -310,7 +364,6 @@
                 <span class="card-tag">密钥: 1095</span>
             </div>
             <div class="card-body">
-                <!-- 第一笔交易记录：案发当晚异常巨款转账 -->
                 <div class="receipt-box">
                     <div class="receipt-title">银行大额异常交易监测回单 (CONFIDENTIAL)</div>
                     <p>转出账户：深讯媒体有限公司（财务专用户口）</p>
@@ -320,7 +373,6 @@
                     <p>交易状态：已划转成功</p>
                 </div>
 
-                <!-- 第二笔交易记录：5年前老张交易记录 -->
                 <div class="receipt-box">
                     <div class="receipt-title">历史关联交易凭证</div>
                     <p>转出账户：黑河化工企业（企业公户）</p>
@@ -334,7 +386,7 @@
         </div>
 
         <!-- 站点 5：法医推演 -->
-        <div class="card" id="card-5">
+        <div class="card" id="card-5" onclick="openModalIfUnlocked(5)">
             <div class="card-mask">
                 <p>🔒 需要【站点 5：法医推演】密钥</p>
             </div>
@@ -343,21 +395,16 @@
                 <span class="card-tag">密钥: 4482</span>
             </div>
             <div class="card-body">
-                <!-- SVG 线条复刻：人体解剖伤痕示意图 -->
                 <div class="svg-container">
                     <svg width="280" height="120" viewBox="0 0 280 120">
-                        <!-- 人体轮廓 -->
                         <circle cx="140" cy="20" r="10" fill="none" stroke="#262c3a" stroke-width="2"/>
                         <line x1="140" y1="30" x2="140" y2="80" stroke="#262c3a" stroke-width="2"/>
                         <line x1="140" y1="45" x2="110" y2="60" stroke="#262c3a" stroke-width="2"/>
                         <line x1="140" y1="45" x2="170" y2="60" stroke="#262c3a" stroke-width="2"/>
-                        <!-- 颅脑损伤撞击点（非致命伤） -->
                         <circle cx="140" cy="15" r="3" fill="#e63946"/>
                         <text x="155" y="20" fill="#e63946" font-size="9">颅脑损伤撞击点（非致命伤）</text>
-                        <!-- 手腕浅表表皮划伤 -->
                         <circle cx="170" cy="60" r="3" fill="#ffd166"/>
                         <text x="180" y="65" fill="#ffd166" font-size="9">手腕浅表表皮划伤</text>
-                        <!-- 指甲缝里留有未知皮肤碎屑 -->
                         <circle cx="110" cy="60" r="3" fill="#2a9d8f"/>
                         <text x="25" y="65" fill="#2a9d8f" font-size="9">指甲缝未知皮肤碎屑</text>
                     </svg>
@@ -370,6 +417,22 @@
             </div>
         </div>
 
+    </div>
+
+    <!-- 解锁线索弹窗 (Modal) -->
+    <div class="modal-overlay" id="clue-modal" onclick="closeModal(event)">
+        <div class="modal-container" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <span class="card-title" id="modal-title">线索详情</span>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span class="card-tag" id="modal-tag">解密成功</span>
+                    <button class="modal-close-btn" onclick="closeModal(null, true)">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body" id="modal-body-content">
+                <!-- 动态填充线索内容 -->
+            </div>
+        </div>
     </div>
 
     <script>
@@ -395,21 +458,53 @@
         }
 
         function unlock(num) {
-            if(unlockedSet.has(num)) return;
-            unlockedSet.add(num);
-            
-            document.getElementById(`card-${num}`).classList.add('unlocked');
-            document.getElementById('prog-num').innerText = unlockedSet.size;
+            if(!unlockedSet.has(num)) {
+                unlockedSet.add(num);
+                document.getElementById(`card-${num}`).classList.add('unlocked');
+                document.getElementById('prog-num').innerText = unlockedSet.size;
+            }
+            // 触发弹窗显示
+            showModal(num);
         }
 
-        function playAudio() {
-            const box = document.getElementById('wave-bar-box');
-            const text = document.getElementById('audio-text');
-            box.classList.add('playing');
-            text.innerHTML = `
-                <div class="dialogue-q">问（民警）：“阿姨，您在案发前后有听到或看到什么了吗？”</div>
-                <div class="dialogue-a">答（保洁阿姨）：“我当时正在12楼楼梯口清理垃圾，突然听到陆总办公室里传出有人大声喊‘就算是1000万也买不通我！’，紧接着就是很重的撞击声和一声惨叫！没多久，我就听到楼梯间门被推开，貌似有人急急忙忙走楼梯离开了大楼……对了，我突然想起来，大概在20:20前后，我还看到老张叼着烟进了电梯。”</div>
-            `;
+        function openModalIfUnlocked(num) {
+            if(unlockedSet.has(num)) {
+                showModal(num);
+            }
+        }
+
+        function showModal(num) {
+            const card = document.getElementById(`card-${num}`);
+            const title = card.querySelector('.card-title').innerText;
+            const tag = card.querySelector('.card-tag').innerText;
+            const bodyHtml = card.querySelector('.card-body').innerHTML;
+
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-tag').innerText = tag;
+            document.getElementById('modal-body-content').innerHTML = bodyHtml;
+
+            const modal = document.getElementById('clue-modal');
+            modal.classList.add('active');
+        }
+
+        function closeModal(event, force = false) {
+            if(force || event.target.classList.contains('modal-overlay')) {
+                document.getElementById('clue-modal').classList.remove('active');
+            }
+        }
+
+        function playAudio(btn) {
+            const container = btn.closest('.card-body') || btn.closest('.modal-body');
+            if(!container) return;
+            const box = container.querySelector('.audio-wave');
+            const text = container.querySelector('.dialogue-box');
+            if(box) box.classList.add('playing');
+            if(text) {
+                text.innerHTML = `
+                    <div class="dialogue-q">问（民警）：“阿姨，您在案发前后有听到或看到什么了吗？”</div>
+                    <div class="dialogue-a">答（保洁阿姨）：“我当时正在12楼楼梯口清理垃圾，突然听到陆总办公室里传出有人大声喊‘就算是1000万也买不通我！’，紧接着就是很重的撞击声和一声惨叫！没多久，我就听到楼梯间门被推开，貌似有人急急忙忙走楼梯离开了大楼……对了，我突然想起来，大概在20:20前后，我还看到老张叼着烟进了电梯。”</div>
+                `;
+            }
         }
     </script>
 </body>
