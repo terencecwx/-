@@ -152,9 +152,9 @@
             scroll-snap-type: x mandatory;
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
-            scrollbar-width: none; /* 隐藏 Firefox 滚动条 */
+            scrollbar-width: none;
         }
-        .gallery-slider::-webkit-scrollbar { display: none; } /* 隐藏 Chrome/Safari 滚动条 */
+        .gallery-slider::-webkit-scrollbar { display: none; }
 
         .gallery-slide {
             flex: 0 0 100%;
@@ -454,7 +454,7 @@
             </div>
         </div>
 
-        <!-- 站点 5：法医推演（已替换为 iMessage 风格滑动相册） -->
+        <!-- 站点 5：法医推演 -->
         <div class="card" id="card-5" onclick="openModalIfUnlocked(5)">
             <div class="card-mask">
                 <p>🔒 需要【站点 5：法医推演】密钥</p>
@@ -513,6 +513,7 @@
         </div>
     </div>
 
+    <!-- ⬇️ 核心 JavaScript 脚本区域 ⬇️ -->
     <script>
         const passcodes = {
             '8912': 1,
@@ -527,7 +528,23 @@
         function submitPasscode() {
             const input = document.getElementById('passcode-input');
             const code = input.value.trim();
-            if(passcodes[code]) {
+
+            // 🔑 特殊逻辑：输入万能密钥 090221 一键解锁所有线索
+            if (code === '090221') {
+                [1, 2, 3, 4, 5].forEach(num => {
+                    if (!unlockedSet.has(num)) {
+                        unlockedSet.add(num);
+                        document.getElementById(`card-${num}`).classList.add('unlocked');
+                    }
+                });
+                document.getElementById('prog-num').innerText = unlockedSet.size;
+                input.value = '';
+                alert('🔓 万能密钥激活！所有 5 个站点线索已全部解锁。');
+                return;
+            }
+
+            // 单个站点密钥解锁逻辑
+            if (passcodes[code]) {
                 unlock(passcodes[code]);
                 input.value = '';
             } else {
@@ -536,7 +553,7 @@
         }
 
         function unlock(num) {
-            if(!unlockedSet.has(num)) {
+            if (!unlockedSet.has(num)) {
                 unlockedSet.add(num);
                 document.getElementById(`card-${num}`).classList.add('unlocked');
                 document.getElementById('prog-num').innerText = unlockedSet.size;
@@ -546,7 +563,7 @@
         }
 
         function openModalIfUnlocked(num) {
-            if(unlockedSet.has(num)) {
+            if (unlockedSet.has(num)) {
                 showModal(num);
             }
         }
@@ -566,7 +583,7 @@
         }
 
         function closeModal(event, force = false) {
-            if(force || event.target.classList.contains('modal-overlay')) {
+            if (force || event.target.classList.contains('modal-overlay')) {
                 document.getElementById('clue-modal').classList.remove('active');
             }
         }
@@ -590,11 +607,11 @@
 
         function playAudio(btn) {
             const container = btn.closest('.card-body') || btn.closest('.modal-body');
-            if(!container) return;
+            if (!container) return;
             const box = container.querySelector('.audio-wave');
             const text = container.querySelector('.dialogue-box');
-            if(box) box.classList.add('playing');
-            if(text) {
+            if (box) box.classList.add('playing');
+            if (text) {
                 text.innerHTML = `
                     <div class="dialogue-q">问（民警）：“阿姨，您在案发前后有听到或看到什么了吗？”</div>
                     <div class="dialogue-a">答（保洁阿姨）：“我当时正在12楼楼梯口清理垃圾，突然听到陆总办公室里传出有人大声喊‘就算是1000万也买不通我！’，紧接着就是很重的撞击声和一声惨叫！没多久，我就听到楼梯间门被推开，貌似有人急急忙忙走楼梯离开了大楼……对了，我突然想起来，大概在20:20前后，我还看到老张叼着烟进了电梯。”</div>
