@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>【绝密档案】深讯网·第25版头条未竟调查</title>
+    <style>
+        :root {
+            --bg-color: #0b0d12;
+            --card-bg: #161922;
+            --accent-red: #e63946;
+            --accent-green: #2a9d8f;
+            --gold: #ffd166;
+            --text-main: #e0e6ed;
+            --text-dim: #7a8b9e;
+            --border-color: #262c3a;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); padding: 12px; max-width: 1240px; margin: 0 auto; }
+
+        /* 顶部解锁控制台 */
+        .top-bar {
+            background: #11141d;
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        .key-input-group { display: flex; gap: 8px; align-items: center; width: 100%; max-width: 400px; }
+        .key-input-group input {
+            background: #0b0d12; border: 1px solid var(--border-color); color: #fff;
+            padding: 10px 12px; border-radius: 6px; font-size: 14px; flex: 1; min-width: 0;
+            outline: none;
+        }
+        .key-input-group input:focus { border-color: var(--gold); }
+        .btn {
+            background: var(--accent-red); color: #fff; border: none; padding: 10px 15px;
+            border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold; transition: 0.2s;
+            white-space: nowrap; flex-shrink: 0;
+        }
+        .btn:active { opacity: 0.8; transform: scale(0.98); }
+
+        /* 标头与NPC介绍栏 */
+        header { 
+            border-bottom: 2px solid var(--accent-red); 
+            padding-bottom: 12px; 
+            margin-bottom: 15px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-end; 
+            gap: 10px;
+        }
+        .logo { font-size: 22px; font-weight: 900; letter-spacing: 1px; display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+        .logo span { background: var(--accent-red); color: #fff; padding: 2px 6px; font-size: 13px; border-radius: 3px; }
+
+        .npc-intro-box {
+            background: #12151e;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+        .npc-intro-title {
+            color: var(--gold);
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 5px;
+        }
+        .npc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            font-size: 12px;
+        }
+        .npc-card-item {
+            background: #181c27;
+            padding: 8px 10px;
+            border-radius: 6px;
+            border-left: 3px solid var(--accent-red);
+        }
+        .npc-name { color: #fff; font-weight: bold; font-size: 13px; margin-bottom: 2px; }
+
+        /* 网格卡片 */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; }
+        .card { 
+            background: var(--card-bg); 
+            border: 1px solid var(--border-color); 
+            border-radius: 8px; 
+            overflow: hidden; 
+            position: relative; 
+            min-height: 280px; 
+            transition: border-color 0.3s;
+        }
+        .card.unlocked { cursor: pointer; }
+        .card.unlocked:hover { border-color: var(--gold); }
+        
+        .card-mask {
+            position: absolute; top:0; left:0; right:0; bottom:0;
+            background: rgba(11, 13, 18, 0.95); backdrop-filter: blur(5px);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 10; transition: 0.5s; padding: 20px; text-align: center;
+        }
+        .card.unlocked .card-mask { opacity: 0; pointer-events: none; }
+
+        .card-header { background: #1c212e; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
+        .card-title { font-size: 13px; font-weight: bold; color: #fff; }
+        .card-tag { font-size: 11px; color: var(--gold); background: rgba(255, 209, 102, 0.1); padding: 2px 6px; border-radius: 3px; border: 1px solid var(--gold); flex-shrink: 0; }
+        .card-body { padding: 12px; font-size: 13px; line-height: 1.6; }
+
+        .report-section-title {
+            color: var(--gold); font-size: 12px; font-weight: bold; margin: 10px 0 6px 0; border-bottom: 1px solid #222735; padding-bottom: 4px;
+        }
+        
+        /* 矢量绘图容器 */
+        .svg-container { background: #0e1117; border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 10px; text-align: center; padding: 8px 0; overflow: hidden; }
+        .svg-container svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+        
+        /* AI 实景图片容器样式 */
+        .img-container {
+            background: #0e1117;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .img-container img {
+            width: 100%;
+            height: auto;
+            max-height: 220px;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* 音频波形 */
+        .audio-wave { display: flex; align-items: center; gap: 3px; height: 35px; background: #0e1117; padding: 8px; border-radius: 6px; }
+        .bar { flex: 1; background: #2c3444; height: 30%; transition: 0.3s; }
+        .playing .bar { background: var(--accent-green); animation: wave 0.8s infinite alternate; }
+        .playing .bar:nth-child(2n) { animation-delay: 0.2s; }
+        .playing .bar:nth-child(3n) { animation-delay: 0.4s; }
+        @keyframes wave { 0% { height: 15%; } 100% { height: 100%; } }
+
+        /* 银行凭证 CSS 线框 */
+        .receipt-box { background: #f8f9fa; color: #111; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 11px; margin-bottom: 10px; word-break: break-all; }
+        .receipt-title { text-align: center; font-weight: bold; font-size: 12px; border-bottom: 1px dashed #666; padding-bottom: 5px; margin-bottom: 8px; }
+
+        /* 对话框样式 */
+        .dialogue-box { background: #0e1117; border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; font-size: 12px; margin-top: 8px; }
+        .dialogue-q { color: var(--gold); font-weight: bold; margin-bottom: 4px; }
+        .dialogue-a { color: var(--text-main); line-height: 1.5; }
+
+        /* 解锁弹窗 (Modal) 样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 15px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-container {
+            background: var(--card-bg);
+            border: 1px solid var(--gold);
+            border-radius: 10px;
+            max-width: 580px;
+            width: 100%;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            animation: modalIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .modal-header {
+            background: #1c212e;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .modal-close-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            font-size: 22px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0 5px;
+        }
+        .modal-close-btn:hover { color: #fff; }
+        .modal-body {
+            padding: 15px;
+            overflow-y: auto;
+        }
+        /* 弹窗中的图片样式取消最大高度限制，方便玩家放大查看 */
+        .modal-body .img-container img {
+            max-height: none;
+        }
+
+        /* 📱 手机端竖屏专属优化 (Mobile Portrait Optimization) */
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            header { flex-direction: column; align-items: flex-start; gap: 6px; }
+            header > div:last-child { text-align: left !important; font-size: 12px !important; }
+            .top-bar { flex-direction: column; align-items: stretch; }
+            .key-input-group { width: 100%; max-width: none; }
+            .grid { grid-template-columns: 1fr; }
+            .npc-grid { grid-template-columns: 1fr; }
+            .card-title { font-size: 13px; }
+            .btn { padding: 10px; font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 顶栏 -->
+    <header>
+        <div>
+            <div class="logo">DEEP NEWS <span>第25版头条未竟案</span></div>
+            <p style="font-size: 11px; color: var(--text-dim); margin-top: 4px;">案发时间：2026-09-05 21:00 | 死者：陆远</p>
+        </div>
+        <div style="text-align: right; font-size: 12px; color: var(--text-dim);">
+            已解锁核心档案: <span id="prog-num" style="color:var(--gold); font-weight:bold; font-size:16px;">0</span> / 5
+        </div>
+    </header>
+
+    <!-- 输入解锁码控制台 -->
+    <div class="top-bar">
+        <div class="key-input-group">
+            <input type="text" id="passcode-input" placeholder="输入站点密钥" maxlength="8" inputmode="numeric">
+            <button class="btn" onclick="submitPasscode()">解锁线索</button>
+        </div>
+        <div style="font-size: 11px; color: var(--text-dim);">输入密钥解锁对应站点案情</div>
+    </div>
+
+    <!-- NPC 角色基本介绍栏 -->
+    <div class="npc-intro-box">
+        <div class="npc-intro-title">📋 现场涉案人员（NPC）基本档案</div>
+        <div class="npc-grid">
+            <div class="npc-card-item">
+                <div class="npc-name">Vivian</div>
+                <div style="color: var(--text-dim);">《深讯网》资深摄影记者，陆远多年的合作搭档，急于求名求利。</div>
+            </div>
+            <div class="npc-card-item">
+                <div class="npc-name">老张</div>
+                <div style="color: var(--text-dim);">《深讯网》档案库管理员，脾气古怪，5年前曾任黑河化工企业技术人员。</div>
+            </div>
+            <div class="npc-card-item">
+                <div class="npc-name">K</div>
+                <div style="color: var(--text-dim);">《深讯网》运维与技术主管，陆远的死忠技术助手，负责加密系统。</div>
+            </div>
+            <div class="npc-card-item">
+                <div class="npc-name">陈总监</div>
+                <div style="color: var(--text-dim);">《深讯网》财务总监，高管，负责公司资金运营与账务管理。</div>
+            </div>
+            <div class="npc-card-item">
+                <div class="npc-name">Dr. 林</div>
+                <div style="color: var(--text-dim);">法医顾问，受邀协助调查本次坠楼案，专业严谨。</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5大无序网格卡片 -->
+    <div class="grid">
+
+        <!-- 站点 1：现场图谱（已修改为图片容器） -->
+        <div class="card" id="card-1" onclick="openModalIfUnlocked(1)">
+            <div class="card-mask">
+                <p>🔒 需要【站点 1：现场图谱】密钥</p>
+            </div>
+            <div class="card-header">
+                <span class="card-title">01 / 现场图谱：办公室遗留痕迹</span>
+                <span class="card-tag">密钥: 8912</span>
+            </div>
+            <div class="card-body">
+                <!-- 替换图片说明：请将 src="site01.jpg" 改为您生成保存的图片路径 -->
+                <div class="img-container">
+                    <img src="site01.jpg" alt="现场图谱照片" onerror="this.onerror=null; this.src='https://via.placeholder.com/600x350/0e1117/ffd166?text=%E8%AF%B7%E5%B0%86AI%E7%94%9F%E6%82%A3%E5%9B%BE%E7%89%87%E5%90%8D%E7%A7%B0%E6%94%B9%E4%B8%BA+site01.jpg'">
+                </div>
+                
+                <div class="report-section-title">现场调查报告</div>
+                <ol style="padding-left: 18px; color: var(--text-dim); font-size: 12px; line-height: 1.7;">
+                    <li>窗台发现明显的强行推拽擦痕。</li>
+                    <li>办公桌桌角发现血迹，血迹样本DNA与死者相吻合。</li>
+                    <li>地板上的咖啡渍经鉴定后确认是于19:00-20:00期间造成的。</li>
+                    <li>现场残留少量烟草燃烧造成的灰烬。</li>
+                    <li>死者办公桌上有墨水倒翻的痕迹。</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- 站点 2：系统日志 -->
+        <div class="card" id="card-2" onclick="openModalIfUnlocked(2)">
+            <div class="card-mask">
+                <p>🔒 需要【站点 2：系统日志】密钥</p>
+            </div>
+            <div class="card-header">
+                <span class="card-title">02 / 系统日志：大楼风控记录</span>
+                <span class="card-tag">密钥: 3041</span>
+            </div>
+            <div class="card-body">
+                <div class="svg-container">
+                    <svg width="280" height="130" viewBox="0 0 280 130">
+                        <rect x="20" y="10" width="240" height="110" fill="#05070a" stroke="#262c3a"/>
+                        <rect x="80" y="20" width="120" height="90" fill="none" stroke="#2a9d8f" stroke-dasharray="2"/>
+                        <circle cx="140" cy="45" r="12" fill="#2a9d8f"/>
+                        <path d="M 120 85 L 140 58 L 160 85 Z" fill="#2a9d8f"/>
+                        <text x="30" y="30" fill="#ffd166" font-size="9">CAM-04 20:20:12</text>
+                        <text x="95" y="105" fill="#2a9d8f" font-size="9">12F 电梯监控视角</text>
+                    </svg>
+                </div>
+
+                <div class="report-section-title">电梯监控记录</div>
+                <ol style="padding-left: 18px; color: var(--text-dim); font-size: 12px; line-height: 1.7;">
+                    <li>电梯监控记录了 Vivian（19:28 乘坐电梯上楼，19:47 乘坐电梯下楼）、老张（20:00 乘坐电梯上楼，20:20 乘坐电梯下楼）以及陈总监（20:20 乘坐电梯上楼）。</li>
+                    <li>监控显示20:20，老张叼着烟走出电梯，陈总监操作着手机走进电梯。</li>
+                </ol>
+
+                <div class="report-section-title">机房网关记录</div>
+                <ol style="padding-left: 18px; color: var(--text-dim); font-size: 12px; line-height: 1.7;">
+                    <li>20:15 管理员账户-K向陆远办公室的本地电脑发出了远程控制请求</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- 站点 3：警方调查 -->
+        <div class="card" id="card-3" onclick="openModalIfUnlocked(3)">
+            <div class="card-mask">
+                <p>🔒 需要【站点 3：警方调查】密钥</p>
+            </div>
+            <div class="card-header">
+                <span class="card-title">03 / 警方调查：保洁阿姨的笔录</span>
+                <span class="card-tag">密钥: 6620</span>
+            </div>
+            <div class="card-body">
+                <div class="audio-wave">
+                    <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                    <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                </div>
+                <button class="btn" style="width: 100%; margin-top: 8px;" onclick="playAudio(this); event.stopPropagation();">▶ 播放保洁阿姨笔录录音</button>
+                
+                <div class="dialogue-box">
+                    <div class="dialogue-q">【民警询问笔录】（点击上方按钮播放）</div>
+                    <div class="dialogue-a" style="color: var(--text-dim);">点击播放音频调取口供录音档案...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 站点 4：银行系统 -->
+        <div class="card" id="card-4" onclick="openModalIfUnlocked(4)">
+            <div class="card-mask">
+                <p>🔒 需要【站点 4：银行系统】密钥</p>
+            </div>
+            <div class="card-header">
+                <span class="card-title">04 / 银行系统：案情相关转账记录</span>
+                <span class="card-tag">密钥: 1095</span>
+            </div>
+            <div class="card-body">
+                <div class="receipt-box">
+                    <div class="receipt-title">银行大额异常交易监测回单 (CONFIDENTIAL)</div>
+                    <p>转出账户：深讯媒体有限公司（财务专用户口）</p>
+                    <p>收款账户：陆远（个人户口）</p>
+                    <p>转账金额：<strong style="color:#e63946;">￥1,000,000.00</strong></p>
+                    <p>交易时间：2026-09-05 20:25:44</p>
+                    <p>交易状态：已划转成功</p>
+                </div>
+
+                <div class="receipt-box">
+                    <div class="receipt-title">历史关联交易凭证</div>
+                    <p>转出账户：黑河化工企业（企业公户）</p>
+                    <p>收款账户：老张（个人户口）</p>
+                    <p>转账金额：<strong style="color:#e63946;">￥50,000.00</strong></p>
+                    <p>交易时间：2021-09-12 14:30:15</p>
+                    <p>交易备注：咨询服务费</p>
+                    <p>交易状态：已划转成功</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 站点 5：法医推演 -->
+        <div class="card" id="card-5" onclick="openModalIfUnlocked(5)">
+            <div class="card-mask">
+                <p>🔒 需要【站点 5：法医推演】密钥</p>
+            </div>
+            <div class="card-header">
+                <span class="card-title">05 / 法医推演：尸体病理伤痕</span>
+                <span class="card-tag">密钥: 4482</span>
+            </div>
+            <div class="card-body">
+                <div class="svg-container">
+                    <svg width="280" height="120" viewBox="0 0 280 120">
+                        <circle cx="140" cy="20" r="10" fill="none" stroke="#262c3a" stroke-width="2"/>
+                        <line x1="140" y1="30" x2="140" y2="80" stroke="#262c3a" stroke-width="2"/>
+                        <line x1="140" y1="45" x2="110" y2="60" stroke="#262c3a" stroke-width="2"/>
+                        <line x1="140" y1="45" x2="170" y2="60" stroke="#262c3a" stroke-width="2"/>
+                        <circle cx="140" cy="15" r="3" fill="#e63946"/>
+                        <text x="155" y="20" fill="#e63946" font-size="9">颅脑损伤撞击点（非致命伤）</text>
+                        <circle cx="170" cy="60" r="3" fill="#ffd166"/>
+                        <text x="180" y="65" fill="#ffd166" font-size="9">手腕浅表表皮划伤</text>
+                        <circle cx="110" cy="60" r="3" fill="#2a9d8f"/>
+                        <text x="25" y="65" fill="#2a9d8f" font-size="9">指甲缝未知皮肤碎屑</text>
+                    </svg>
+                </div>
+
+                <div class="report-section-title">法医尸检报告</div>
+                <p style="color: var(--text-dim); font-size: 12px; line-height: 1.6;">
+                    初步判定死亡时间为19:00至21:00之间，死因为：重度颅脑损伤（脑挫裂伤、颅底骨折伴颅内出血）、胸腹腔脏器破裂出血。坠楼前头部曾受硬物撞击致头皮撕裂失血及轻微脑震荡。死者指甲内的未知皮肤碎屑经DNA鉴定属于Vivian女士。
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 解锁线索弹窗 (Modal) -->
+    <div class="modal-overlay" id="clue-modal" onclick="closeModal(event)">
+        <div class="modal-container" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <span class="card-title" id="modal-title">线索详情</span>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span class="card-tag" id="modal-tag">解密成功</span>
+                    <button class="modal-close-btn" onclick="closeModal(null, true)">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body" id="modal-body-content">
+                <!-- 动态填充线索内容 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const passcodes = {
+            '8912': 1,
+            '3041': 2,
+            '6620': 3,
+            '1095': 4,
+            '4482': 5
+        };
+
+        const unlockedSet = new Set();
+
+        function submitPasscode() {
+            const input = document.getElementById('passcode-input');
+            const code = input.value.trim();
+            if(passcodes[code]) {
+                unlock(passcodes[code]);
+                input.value = '';
+            } else {
+                alert('密钥错误，请核对站点筹码卡上的密码！');
+            }
+        }
+
+        function unlock(num) {
+            if(!unlockedSet.has(num)) {
+                unlockedSet.add(num);
+                document.getElementById(`card-${num}`).classList.add('unlocked');
+                document.getElementById('prog-num').innerText = unlockedSet.size;
+            }
+            // 触发弹窗显示
+            showModal(num);
+        }
+
+        function openModalIfUnlocked(num) {
+            if(unlockedSet.has(num)) {
+                showModal(num);
+            }
+        }
+
+        function showModal(num) {
+            const card = document.getElementById(`card-${num}`);
+            const title = card.querySelector('.card-title').innerText;
+            const tag = card.querySelector('.card-tag').innerText;
+            const bodyHtml = card.querySelector('.card-body').innerHTML;
+
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-tag').innerText = tag;
+            document.getElementById('modal-body-content').innerHTML = bodyHtml;
+
+            const modal = document.getElementById('clue-modal');
+            modal.classList.add('active');
+        }
+
+        function closeModal(event, force = false) {
+            if(force || event.target.classList.contains('modal-overlay')) {
+                document.getElementById('clue-modal').classList.remove('active');
+            }
+        }
+
+        function playAudio(btn) {
+            const container = btn.closest('.card-body') || btn.closest('.modal-body');
+            if(!container) return;
+            const box = container.querySelector('.audio-wave');
+            const text = container.querySelector('.dialogue-box');
+            if(box) box.classList.add('playing');
+            if(text) {
+                text.innerHTML = `
+                    <div class="dialogue-q">问（民警）：“阿姨，您在案发前后有听到或看到什么了吗？”</div>
+                    <div class="dialogue-a">答（保洁阿姨）：“我当时正在12楼楼梯口清理垃圾，突然听到陆总办公室里传出有人大声喊‘就算是1000万也买不通我！’，紧接着就是很重的撞击声和一声惨叫！没多久，我就听到楼梯间门被推开，貌似有人急急忙忙走楼梯离开了大楼……对了，我突然想起来，大概在20:20前后，我还看到老张叼着烟进了电梯。”</div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
