@@ -355,7 +355,6 @@
             </div>
             <div class="card-header">
                 <span class="card-title">01 / 现场图谱：办公室遗留痕迹</span>
-                <span class="card-tag">密钥: 8912</span>
             </div>
             <div class="card-body">
                 <div class="img-container">
@@ -380,7 +379,6 @@
             </div>
             <div class="card-header">
                 <span class="card-title">02 / 系统日志：大楼风控记录</span>
-                <span class="card-tag">密钥: 3041</span>
             </div>
             <div class="card-body">
                 <div class="img-container">
@@ -407,7 +405,6 @@
             </div>
             <div class="card-header">
                 <span class="card-title">03 / 警方调查：保洁阿姨的笔录</span>
-                <span class="card-tag">密钥: 6620</span>
             </div>
             <div class="card-body">
                 <div class="audio-wave">
@@ -430,7 +427,6 @@
             </div>
             <div class="card-header">
                 <span class="card-title">04 / 银行系统：案情相关转账记录</span>
-                <span class="card-tag">密钥: 1095</span>
             </div>
             <div class="card-body">
                 <div class="receipt-box">
@@ -471,7 +467,6 @@
             </div>
             <div class="card-header">
                 <span class="card-title">05 / 法医推演：尸体病理伤痕</span>
-                <span class="card-tag">密钥: 4482</span>
             </div>
             <div class="card-body">
                 
@@ -581,7 +576,8 @@
         function showModal(num) {
             const card = document.getElementById(`card-${num}`);
             const title = card.querySelector('.card-title').innerText;
-            const tag = card.querySelector('.card-tag').innerText;
+            const tagEl = card.querySelector('.card-tag');
+            const tag = tagEl ? tagEl.innerText : '解密成功';
             const bodyHtml = card.querySelector('.card-body').innerHTML;
 
             document.getElementById('modal-title').innerText = title;
@@ -623,8 +619,8 @@
             if (box) box.classList.add('playing');
             if (text) {
                 text.innerHTML = `
-                    <div class="dialogue-q">问（民警）：“阿姨，您在案发前后有听到或看到什么吗？”</div>
-                    <div class="dialogue-a">答（保洁阿姨）：“我当时正在12楼电梯井附近清理垃圾，突然听到陆总办公室里传出有人大声喊‘就算是1000万也买不通我！’ 接着就有一声巨响，没多久，我就听到楼梯间门被推开，貌似有人急急忙忙走楼梯离开了大楼……对了，我突然想起来，在此之前，emm大概在20:20前后，我曾看见老张叼着烟进了电梯。”</div>
+                    <div class="dialogue-q">问（民警）：“阿姨，您在案发前后有听到或看到什么了吗？”</div>
+                    <div class="dialogue-a">答（保洁阿姨）：“我当时正在12楼电梯井附近清理垃圾，突然听到陆总办公室里传出有人大声喊‘就算是1000万也买不通我！’没多久，我就听到楼梯间门被推开，貌似有人急急忙忙走楼梯离开了大楼……对了，我突然想起来，大概在20:20前后，我还看到老张叼着烟进了电梯。”</div>
                 `;
             }
         }
