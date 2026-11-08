@@ -200,11 +200,65 @@
             border-radius: 50%;
             background: #444c5e;
             transition: all 0.3s;
+            cursor: pointer;
         }
         .dot.active {
             background: var(--gold);
             width: 14px;
             border-radius: 4px;
+        }
+
+        /* 🎧 自定义科技感音频播放器 UI */
+        .custom-audio-player {
+            background: #0e1117;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        .audio-play-btn {
+            background: var(--accent-red);
+            color: #fff;
+            border: none;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 14px;
+            flex-shrink: 0;
+            transition: 0.2s;
+        }
+        .audio-play-btn:hover { opacity: 0.9; transform: scale(1.05); }
+        .audio-info { flex: 1; min-width: 0; }
+        .audio-title-text { font-size: 12px; font-weight: bold; color: var(--gold); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .audio-progress-bar {
+            background: #202634;
+            height: 5px;
+            border-radius: 3px;
+            position: relative;
+            cursor: pointer;
+            width: 100%;
+        }
+        .audio-progress-fill {
+            background: var(--accent-green);
+            height: 100%;
+            width: 0%;
+            border-radius: 3px;
+            pointer-events: none;
+        }
+        .audio-time {
+            font-size: 11px;
+            color: var(--text-dim);
+            font-family: monospace;
+            flex-shrink: 0;
+            min-width: 65px;
+            text-align: right;
         }
 
         /* 银行凭证 CSS 线框 */
@@ -263,7 +317,6 @@
             padding: 15px;
             overflow-y: auto;
         }
-        /* 弹窗内的图片取消高度限制 */
         .modal-body .img-container img, 
         .modal-body .gallery-slide img {
             max-height: none;
@@ -350,252 +403,4 @@
                 
                 <div class="report-section-title">现场调查报告</div>
                 <ol style="padding-left: 18px; color: var(--text-dim); font-size: 12px; line-height: 1.7;">
-                    <li>死者办公桌上有墨水倒翻的痕迹。</li>
-                    <li>办公桌桌角发现血迹，血迹样本DNA与死者相吻合。</li>
-                    <li>地板上的咖啡渍经鉴定后确认是于19:00-20:00期间造成的。</li>
-                    <li>现场残留一个烟头和少量烟草燃烧造成的灰烬。</li>
-                    <li>窗台附近发现明显的推拽擦痕。</li>
-                </ol>
-            </div>
-        </div>
-
-        <!-- 站点 2：系统日志 -->
-        <div class="card" id="card-2" onclick="openModalIfUnlocked(2)">
-            <div class="card-mask">
-                <p>🔒 需要【站点 2：系统日志】密钥</p>
-            </div>
-            <div class="card-header">
-                <span class="card-title">02 / 系统日志：大楼风控记录</span>
-            </div>
-            <div class="card-body">
-                <div class="img-container">
-                    <img src="site02.jpg" alt="12F电梯监控照片" onerror="this.onerror=null; this.src='https://via.placeholder.com/600x350/0e1117/2a9d8f?text=%E8%AF%B7%E5%B0%86AI%E7%94%9F%E6%82%A3%E5%90%8D%E7%A7%B0%E6%94%B9%E4%B8%BA+site02.jpg'">
-                </div>
-
-                <div class="report-section-title">电梯监控记录</div>
-                <ol style="padding-left: 18px; color: var(--text-dim); font-size: 12px; line-height: 1.7;">
-                    <li>电梯监控记录了 Vivian（19:28 乘坐电梯上楼，19:47 乘坐电梯下楼）、老张（20:00 乘坐电梯上楼，20:20 乘坐电梯下楼）以及陈总监（20:20 乘坐电梯上楼）。</li>
-                    <li>监控显示20:20，老张叼着烟走出电梯，陈总监操作着手机走进电梯。</li>
-                </ol>
-
-                <div class="report-section-title">机房网关记录</div>
-                <ol style="padding-left: 18px; color: var(--text-dim); font-size: 12px; line-height: 1.7;">
-                    <li>20:15 管理员账户-K向陆远办公室的本地电脑发出了远程控制请求</li>
-                </ol>
-            </div>
-        </div>
-
-        <!-- 站点 3：警方调查 -->
-        <div class="card" id="card-3" onclick="openModalIfUnlocked(3)">
-            <div class="card-mask">
-                <p>🔒 需要【站点 3：警方调查】密钥</p>
-            </div>
-            <div class="card-header">
-                <span class="card-title">03 / 警方调查：保洁阿姨的笔录</span>
-            </div>
-            <div class="card-body">
-                <div style="font-size: 12px; color: var(--gold); margin-bottom: 8px; font-weight: bold;">🎧 保洁阿姨现场询问录音档案</div>
-                <audio controls preload="metadata" style="width: 100%; border-radius: 6px; outline: none;" onclick="event.stopPropagation()">
-                    <source src="cleaner_audio.mp3" type="audio/mpeg">
-                    您的浏览器不支持 audio 音频播放标签。
-                </audio>
-                <div style="font-size: 11px; color: var(--text-dim); margin-top: 10px; line-height: 1.6;">
-                    【语音内容摘要】<br>
-                    保洁阿姨回忆：当时正在12楼电梯井附近清理垃圾，听到陆总办公室里传出“就算是1000万也买不通我！”的喊声，随后听到楼梯间门被推开、有人急忙走楼梯离开；并确认20:20前后看到老张叼着烟进了电梯。
-                </div>
-            </div>
-        </div>
-
-        <!-- 站点 4：银行系统 -->
-        <div class="card" id="card-4" onclick="openModalIfUnlocked(4)">
-            <div class="card-mask">
-                <p>🔒 需要【站点 4：银行系统】密钥</p>
-            </div>
-            <div class="card-header">
-                <span class="card-title">04 / 银行系统：案情相关转账记录</span>
-            </div>
-            <div class="card-body">
-                <div class="receipt-box">
-                    <div class="receipt-title">银行大额异常交易监测回单 (CONFIDENTIAL)</div>
-                    <p>转出账户：深讯媒体有限公司（财务专用户口）</p>
-                    <p>收款账户：陆远（个人户口）</p>
-                    <p>转账金额：<strong style="color:#e63946;">￥1,000,000.00</strong></p>
-                    <p>交易时间：2026-09-05 20:21:44</p>
-                    <p>交易状态：已划转成功</p>
-                </div>
-
-                <div class="receipt-box">
-                    <div class="receipt-title">历史关联交易凭证</div>
-                    <p>转出账户：黑河化工企业（企业公户）</p>
-                    <p>收款账户：老张（个人户口）</p>
-                    <p>转账金额：<strong style="color:#e63946;">￥50,000.00</strong></p>
-                    <p>交易时间：2021-09-12 14:30:15</p>
-                    <p>交易备注：咨询服务费</p>
-                    <p>交易状态：已划转成功</p>
-                </div>
-
-                <div class="receipt-box">
-                    <div class="receipt-title">历史关联交易凭证</div>
-                    <p>转出账户：黑河化工企业（企业公户）</p>
-                    <p>收款账户：深讯媒体有限公司（财务专用户口）</p>
-                    <p>转账金额：<strong style="color:#e63946;">￥10,000,000.00</strong></p>
-                    <p>交易时间：2021-09-12 12:21:19</p>
-                    <p>交易备注：咨询服务费</p>
-                    <p>交易状态：已划转成功</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- 站点 5：法医推演 -->
-        <div class="card" id="card-5" onclick="openModalIfUnlocked(5)">
-            <div class="card-mask">
-                <p>🔒 需要【站点 5：法医推演】密钥</p>
-            </div>
-            <div class="card-header">
-                <span class="card-title">05 / 法医推演：尸体病理伤痕</span>
-            </div>
-            <div class="card-body">
-                
-                <!-- 📸 交互式可滑动法医相册 -->
-                <div class="gallery-wrapper">
-                    <div class="gallery-slider" onscroll="updateDots(this)">
-                        <div class="gallery-slide">
-                            <img src="site05_1.jpg" alt="颅脑损伤撞击" onerror="this.onerror=null; this.src='https://via.placeholder.com/600x350/0e1117/e63946?text=%E7%85%A7%E7%89%871%3A+%E9%A2%8D%E8%84%91%E6%82%B3%E4%BC%A4%E6%92%9E%E5%87%BB%E7%82%B9(site05_1.jpg)'">
-                            <span class="slide-caption">1/3 颅脑损伤撞击点（非致命）</span>
-                        </div>
-                        <div class="gallery-slide">
-                            <img src="site05_2.jpg" alt="手臂表皮轻微划伤" onerror="this.onerror=null; this.src='https://via.placeholder.com/600x350/0e1117/ffd166?text=%E7%85%A7%E7%89%872%3A+%E6%89%8B%E8%20%E8%A1%A8%E7%9A%AE%E8%BD%BB%E微%E5%88%92%E4%BC%A4(site05_2.jpg)'">
-                            <span class="slide-caption">2/3 手臂表皮轻微划伤</span>
-                        </div>
-                        <div class="gallery-slide">
-                            <img src="site05_3.jpg" alt="指甲缝皮肤碎屑" onerror="this.onerror=null; this.src='https://via.placeholder.com/600x350/0e1117/2a9d8f?text=%E7%85%A7%E7%89%873%3A+%E6%8C%87%E7%94%B2%E7%BC%9D%E6%9C%AA%E7%9F%A5%E7%9A%AE%E8%20%E7%A2%8E%E5%B1%91(site05_3.jpg)'">
-                            <span class="slide-caption">3/3 指甲缝未知皮肤碎屑</span>
-                        </div>
-                    </div>
-                    <div class="gallery-dots">
-                        <div class="dot active"></div>
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                    </div>
-                </div>
-
-                <div class="report-section-title">法医尸检报告</div>
-                <p style="color: var(--text-dim); font-size: 12px; line-height: 1.6;">
-                    初步判定死亡时间为19:00至21:00之间，死因为重度颅脑损伤（脑挫裂伤、颅底骨折伴颅内出血）、胸腹腔脏器破裂出血。生前头部曾受硬物撞击致头皮撕裂失血及轻微脑震荡。死者指甲内的未知皮肤碎屑经DNA鉴定属于Vivian女士。
-                </p>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- 解锁线索弹窗 (Modal) -->
-    <div class="modal-overlay" id="clue-modal" onclick="closeModal(event)">
-        <div class="modal-container" onclick="event.stopPropagation()">
-            <div class="modal-header">
-                <span class="card-title" id="modal-title">线索详情</span>
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <span class="card-tag" id="modal-tag">解密成功</span>
-                    <button class="modal-close-btn" onclick="closeModal(null, true)">&times;</button>
-                </div>
-            </div>
-            <div class="modal-body" id="modal-body-content">
-                <!-- 动态填充线索内容 -->
-            </div>
-        </div>
-    </div>
-
-    <!-- ⬇️ 核心 JavaScript 脚本区域 ⬇️ -->
-    <script>
-        const passcodes = {
-            '8912': 1,
-            '3041': 2,
-            '6620': 3,
-            '1095': 4,
-            '4482': 5
-        };
-
-        const unlockedSet = new Set();
-
-        function submitPasscode() {
-            const input = document.getElementById('passcode-input');
-            const code = input.value.trim();
-
-            // 🔑 特殊逻辑：输入万能密钥 090221 一键解锁所有线索
-            if (code === '090221') {
-                [1, 2, 3, 4, 5].forEach(num => {
-                    if (!unlockedSet.has(num)) {
-                        unlockedSet.add(num);
-                        document.getElementById(`card-${num}`).classList.add('unlocked');
-                    }
-                });
-                document.getElementById('prog-num').innerText = unlockedSet.size;
-                input.value = '';
-                alert('🔓 万能密钥激活！所有 5 个站点线索已全部解锁。');
-                return;
-            }
-
-            // 单个站点密钥解锁逻辑
-            if (passcodes[code]) {
-                unlock(passcodes[code]);
-                input.value = '';
-            } else {
-                alert('密钥错误，请核对站点筹码卡上的密码！');
-            }
-        }
-
-        function unlock(num) {
-            if (!unlockedSet.has(num)) {
-                unlockedSet.add(num);
-                document.getElementById(`card-${num}`).classList.add('unlocked');
-                document.getElementById('prog-num').innerText = unlockedSet.size;
-            }
-            // 触发弹窗显示
-            showModal(num);
-        }
-
-        function openModalIfUnlocked(num) {
-            if (unlockedSet.has(num)) {
-                showModal(num);
-            }
-        }
-
-        function showModal(num) {
-            const card = document.getElementById(`card-${num}`);
-            const title = card.querySelector('.card-title').innerText;
-            const tagEl = card.querySelector('.card-tag');
-            const tag = tagEl ? tagEl.innerText : '解密成功';
-            const bodyHtml = card.querySelector('.card-body').innerHTML;
-
-            document.getElementById('modal-title').innerText = title;
-            document.getElementById('modal-tag').innerText = tag;
-            document.getElementById('modal-body-content').innerHTML = bodyHtml;
-
-            const modal = document.getElementById('clue-modal');
-            modal.classList.add('active');
-        }
-
-        function closeModal(event, force = false) {
-            if (force || event.target.classList.contains('modal-overlay')) {
-                document.getElementById('clue-modal').classList.remove('active');
-            }
-        }
-
-        /* 📸 滑动相册圆点（Pagination Dots）联动逻辑 */
-        function updateDots(sliderEl) {
-            const width = sliderEl.clientWidth;
-            if (width === 0) return;
-            const scrollLeft = sliderEl.scrollLeft;
-            const activeIndex = Math.round(scrollLeft / width);
-            
-            const dots = sliderEl.parentElement.querySelectorAll('.dot');
-            dots.forEach((dot, idx) => {
-                if (idx === activeIndex) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
-                }
-            });
-        }
-    </script>
-</body>
-</html>
+                    <li>死者办公桌
